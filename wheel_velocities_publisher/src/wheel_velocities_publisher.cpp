@@ -17,8 +17,8 @@ public:
     performMovement({-1.0, -1.0, -1.0, -1.0}, "Moving backward");
     performMovement({-1.0, 1.0, 1.0, -1.0}, "Moving sideways to the left");
     performMovement({1.0, -1.0, -1.0, 1.0}, "Moving sideways to the right");
-    performMovement({-1.0, 1.0, -1.0, 1.0}, "Turning clockwise");
-    performMovement({1.0, -1.0, 1.0, -1.0}, "Turning counter-clockwise");
+    performMovement({1.0, -1.0, 1.0, -1.0}, "Turning clockwise");
+    performMovement({-1.0, 1.0, -1.0, 1.0}, "Turning counter-clockwise");
     performMovement({0.0, 0.0, 0.0, 0.0}, "Stopping");
   }
 
@@ -52,8 +52,7 @@ private:
 int main(int argc, char **argv) {
   rclcpp::init(argc, argv);
   auto node = std::make_shared<WheelVelocityPublisher>(rclcpp::NodeOptions());
-  node->testMovements();
-  rclcpp::spin(node);
+  node->testMovements(); // shutting down right after
   rclcpp::shutdown();
   return 0;
 }

@@ -26,17 +26,17 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-############ wheel vel publisher client ########
-add_executable(wheel_velocities_publisher
+############ wheel vel publisher ########
+add_executable(wheel_vel_pub_node
     src/wheel_velocities_publisher.cpp)
-ament_target_dependencies(wheel_velocities_publisher
+ament_target_dependencies(wheel_vel_pub_node
     ament_cmake
 	rclcpp
 	std_msgs
 )
 
 install(TARGETS
-  wheel_velocities_publisher
+  wheel_vel_pub_node
   DESTINATION lib/${PROJECT_NAME}
 )
 

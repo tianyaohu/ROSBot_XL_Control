@@ -12,7 +12,10 @@ find_package(geometry_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_action REQUIRED)
-find_package(action_msgs REQUIRED)
+# find_package(action_msgs REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
+
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -26,4 +29,27 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
+############ eight_trajectory ########
+add_executable(eight_trajectory_node
+    src/eight_trajectory.cpp)
+target_link_libraries(eight_trajectory_node armadillo) #adding library for solving pesudoinverse
+ament_target_dependencies(eight_trajectory_node
+    ament_cmake
+	rclcpp
+	std_msgs
+	geometry_msgs
+	nav_msgs
+	tf2
+	tf2_geometry_msgs
+)
+install(TARGETS
+  eight_trajectory_node
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+# Install the launch file
+install(DIRECTORY 
+	launch
+    DESTINATION share/${PROJECT_NAME}
+)
 ament_package()

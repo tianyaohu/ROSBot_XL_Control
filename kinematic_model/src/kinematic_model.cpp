@@ -10,11 +10,11 @@ class KinematicController : public rclcpp::Node {
 public:
   KinematicController() : Node("kinematic_model") {
     // r is the radius of the wheels
-    double r = 0.100 / 2;
+    double r = 100 / 2;
     // w is half of track width
-    double w = 0.26969 / 2;
+    double w = 269.69 / 2;
     // l is half of of the wheel base distanc
-    double l = 0.170 / 2;
+    double l = 170 / 2;
     // init kinematic_matrix
     this->init_kinematic_matrix(l, w, r);
 
@@ -46,7 +46,7 @@ private:
   wheelSpeedCallback(const std_msgs::msg::Float32MultiArray::SharedPtr msg) {
     // msg->data contains wheel the order of [front_left, front_right,
     // rear_left, rear_right]
-    // calc lin_x, ang_z velocities
+    // calc ang_z, lin_x, lin_y velocities
     arma::vec wheel_vel_vec = {msg->data[0], msg->data[1], msg->data[2],
                                msg->data[3]};
 
@@ -57,9 +57,10 @@ private:
 
     // Create and publish Twist message
     auto twist_msg = geometry_msgs::msg::Twist();
-    twist_msg.linear.y = vel_vec[0];
+
+    twist_msg.angular.z = vel_vec[0];
     twist_msg.linear.x = vel_vec[1];
-    twist_msg.angular.z = vel_vec[2];
+    twist_msg.linear.y = -vel_vec[2];
     velocity_publisher_->publish(twist_msg);
   }
 

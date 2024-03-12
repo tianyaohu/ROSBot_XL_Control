@@ -15,10 +15,10 @@ public:
   void testMovements() {
     performMovement({1.0, 1.0, 1.0, 1.0}, "Moving forward");
     performMovement({-1.0, -1.0, -1.0, -1.0}, "Moving backward");
-    performMovement({-1.0, 1.0, 1.0, -1.0}, "Moving sideways to the left");
-    performMovement({1.0, -1.0, -1.0, 1.0}, "Moving sideways to the right");
-    performMovement({1.0, -1.0, 1.0, -1.0}, "Turning clockwise");
-    performMovement({-1.0, 1.0, -1.0, 1.0}, "Turning counter-clockwise");
+    performMovement({1.0, -1.0, 1.0, -1.0}, "Moving sideways to the left"); 
+    performMovement({-1.0, 1.0, -1.0, 1.0}, "Moving sideways to the right"); 
+    performMovement({1.0, -1.0, -1.0, 1.0}, "Turning clockwise"); 
+    performMovement({-1.0, 1.0, 1.0, -1.0}, "Turning counter-clockwise"); 
     performMovement({0.0, 0.0, 0.0, 0.0}, "Stopping");
   }
 

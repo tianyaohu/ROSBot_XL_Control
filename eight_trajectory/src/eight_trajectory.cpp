@@ -45,16 +45,24 @@ public:
 
 private:
   void move_to_goal(arma::vec goal) {
-    const double THRESH = 0.02;
+    // threshhold betwen goal and cur_pos
+    const double THRESH = 0.05;    
     arma::vec error;
 
     do {
       // proccess odoms
       rclcpp::spin_some(shared_from_this());
+
       // get current pos
       arma::vec cur_pos = {cur_theta, cur_x, cur_y};
       // calc error
       error = goal - cur_pos;
+
+      // add a proportional gain error;
+      double Kp = 0.55;
+      // recalc error with kp
+      error *= Kp;
+
       // move based on error
       this->abs_motion(error);
 

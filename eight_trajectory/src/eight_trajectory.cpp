@@ -36,6 +36,12 @@ public:
   }
 
   void move_through_waypoints() {
+    // wait and proccess odoms
+    rclcpp::sleep_for(200ms);
+    rclcpp::spin_some(shared_from_this());
+    // init way points here
+    init_waypoints(cur_x, cur_y, cur_theta);
+
     // loop to move through all the way points
     W.each_row([&](arma::rowvec &way_pt) {
       cout << "Moving Towards " << way_pt << endl;
@@ -44,9 +50,24 @@ public:
   }
 
 private:
+  void init_waypoints(double start_x, double start_y, double start_theta) {
+    // convert the input into a vec
+    arma::rowvec start_vec = {start_theta, start_x, start_y};
+
+    // add the start vec to every row of way_pts
+    W.each_row() += start_vec;
+
+    start_vec.print("Start vec is");
+
+    // Apply the test function to the first column
+    W.col(0).transform(normalize);
+
+    W.print("W =");
+  }
+
   void move_to_goal(arma::vec goal) {
     // threshhold betwen goal and cur_pos
-    const double THRESH = 0.05;    
+    const double THRESH = 0.05;
     arma::vec error;
 
     do {
@@ -59,7 +80,7 @@ private:
       error = goal - cur_pos;
 
       // add a proportional gain error;
-      double Kp = 0.55;
+      double Kp = 0.45;
       // recalc error with kp
       error *= Kp;
 
@@ -107,17 +128,6 @@ private:
     return angle - M_PI;
   }
 
-  void init_waypoints(double start_x, double start_y, double start_theta) {
-    // convert the input into a vec
-    arma::rowvec start_vec = {start_theta, start_x, start_y};
-
-    // add the start vec to every row of way_pts
-    W.each_row() += start_vec;
-
-    // Apply the test function to the first column
-    W.col(0).transform(normalize);
-  }
-
   void odom_callback(const nav_msgs::msg::Odometry::SharedPtr msg) {
     double roll, pitch; // roll pitch is not used here
     // Convert quaternion to Euler angles
@@ -129,12 +139,6 @@ private:
     // get x,y
     cur_x = msg->pose.pose.position.x;
     cur_y = msg->pose.pose.position.y;
-
-    // if running for the very first time, init way points
-    if (first_odom_call_) {
-      init_waypoints(cur_x, cur_y, cur_theta);
-      first_odom_call_ = false;
-    }
   }
 
   inline void init_kinematic_matrix() {
@@ -181,7 +185,6 @@ private:
   arma::mat K;
 
   double cur_x, cur_y, cur_theta;
-  bool first_odom_call_ = true;
 
   // robot physical info
   double wheel_base;
